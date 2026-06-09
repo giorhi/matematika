@@ -62,6 +62,31 @@
             margin-top: 15px;
             font-weight: bold;
             font-size: 18px;
+            min-height: 25px;
+        }
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+        .nav-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .nav-btn:hover {
+            background-color: #0056b3;
+        }
+        .nav-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -72,21 +97,40 @@
         <h2 id="question">კითხვა ჩაიტვირთება...</h2>
         <div id="options"></div>
         <div id="result" class="result"></div>
+        
+        <div class="nav-container">
+            <button id="prev-btn" class="nav-btn" onclick="prevQuestion()">⬅ წინა</button>
+            <button id="next-btn" class="nav-btn" onclick="nextQuestion()">შემდეგი ➡</button>
+        </div>
     </div>
 </div>
 
 <script>
-    // თქვენი ამოცანების ბაზა
     const questionBank = [
         {
             question: "1. გამოთვალეთ: \\( 3\\frac{1}{3} \\cdot (2\\frac{3}{4} - 1,25) \\)",
-            options: ["ა) \\( 2 \\)", "ბ) \\( 5 \\)", "გ) \\( -5 \\)", "დ) \\( \\frac{7}{12} \\)", "ე) \\( \\frac{21}{4} \\)"],
+            options: ["ა) \\( 2 \\)", "ბ) \\( 5 \\)", "გ) \\( -5 \\)", "დ) \\( \\frac{7}{12} \\)"],
             correct: "ბ) \\( 5 \\)"
         },
         {
             question: "2. იპოვეთ 2025-ის ყველა განსხვავებული მარტივი გამყოფის ჯამი.",
-            options: ["ა) 3", "ბ) 5", "გ) 7", "დ) 8", "ე) 9"],
+            options: ["ა) 3", "ბ) 5", "გ) 7", "დ) 8"],
             correct: "დ) 8"
+        }
+        {
+            question: "3. ტელევიზორის ფასი ჯერ 20%-ით შემცირდა, ხოლო შემდეგ კიდევ 10%-ით შემცირდა. სულ რამდენი პროცენტით შემცირდა ტელევიზორის ფასი თავდაპირველ ფასთან შედარებით?",
+            options: ["ა) 27%", "ბ) 28%", "გ) 29%", "დ) 30%"],
+            correct: "ბ) 28%"
+        },
+        {
+            question: "4. ამოზნექილი ოთხკუთხედის კუთხეები ისე შეეფარდება ერთმანეთს, როგორც 1:2:4:5. იპოვეთ ამ ოთხკუთხედის უდიდესი კუთხის სიდიდე.",
+            options: ["ა) \( 130^\circ \)", "ბ) \( 135^\circ \)", "გ) \( 150^\circ \)", "დ) \( 160^\circ \)"],
+            correct: "გ) \( 150^\circ \)"
+        },
+        {
+            question: "5. წრის ფორმის გასაშლელი მაგიდის გარშემოწერილობის სიგრძე \( 2\pi \) მეტრის ტოლია. გაშლის დროს ნახევარწრის ფორმის ნაჭრებს შორის დგამენ მართკუთხედის ფორმის ნაჭერს, რომლის დიაგონალის სიგრძე \( \sqrt{13} \) მეტრია. მაგიდის გაშლის შედეგად რამდენჯერ იზრდება მისი ფართობი?",
+            options: ["ა) \( (6+\pi) \)-ჯერ", "ბ) \( (1+\frac{3}{\pi}) \)-ჯერ", "გ) 2-ჯერ", "დ) \( (1+\frac{6}{\pi}) \)-ჯერ"],
+            correct: "დ) \( (1+\frac{6}{\pi}) \)-ჯერ"
         }
     ];
 
@@ -108,7 +152,10 @@
             optionsContainer.appendChild(button);
         });
 
-        // ეს კოდი აიძულებს საიტს, ყოველ ახალ კითხვაზე ხელახლა გადათარგმნოს სიმბოლოები ლამაზ წილადებად
+        // მართავს ნავიგაციის ღილაკების აქტიურობას
+        document.getElementById("prev-btn").disabled = currentQuestionIndex === 0;
+        document.getElementById("next-btn").disabled = currentQuestionIndex === questionBank.length - 1;
+
         if (window.MathJax) {
             MathJax.typesetPromise();
         }
@@ -120,20 +167,26 @@
 
         if (selectedOption === currentQuestion.correct) {
             resultDiv.innerHTML = "<span style='color: green;'>სწორია! 🎉</span>";
-            setTimeout(() => {
-                currentQuestionIndex++;
-                if (currentQuestionIndex < questionBank.length) {
-                    loadQuestion();
-                } else {
-                    document.getElementById("quiz").innerHTML = "<h2>ტესტი დასრულდა! ყოჩაღ! 🌟</h2>";
-                }
-            }, 1500);
         } else {
             resultDiv.innerHTML = "<span style='color: red;'>არასწორია, სცადე თავიდან! ❌</span>";
         }
     }
 
-    // ტესტის გაშვება
+    function nextQuestion() {
+        if (currentQuestionIndex < questionBank.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            loadQuestion();
+        }
+    }
+
+    // სტარტი
     loadQuestion();
 </script>
 
