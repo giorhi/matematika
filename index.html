@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>მათემატიკის ეროვნული გამოცდების სავარჯიშო</title>
     
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/dist/video/tex-mml-chtml.js"></script>
+    <!-- სრულიად უსაფრთხო მათემატიკური ფორმულების (MathJax) მხარდაჭერა Cloudflare-დან -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" integrity="sha512-9b7e7XscH6vGepH69Nco3mcrWAsf4E3XclvG86PzM2D6P2B2oO0fG28bEXpS7M805b5WwXFwE7I7N6A4vC6S6A==" crossorigin="anonymous" referrerpolicy="no-referrer" async></script>
 
     <style>
         body {
@@ -88,7 +88,8 @@
     </div>
     
     <div class="options-container" id="options-box">
-        </div>
+        <!-- პასუხები ჩაჯდება აქ -->
+    </div>
     
     <div class="controls">
         <div id="feedback"></div>
@@ -97,8 +98,6 @@
 </div>
 
 <script>
-    // 🔍 აქ ამატებთ თქვენს ამოცანებს!
-    // მათემატიკური ფორმულებისთვის გამოიყენეთ ფორმატი: \( ფორმულა \)
     const questionBank = [
         {
             question: "იპოვეთ \( f(x) = 2x + 3 \) ფუნქციის მნიშვნელობა, თუ \( x = 5 \).",
@@ -117,7 +116,7 @@
         },
         {
             question: "მართკუთხა სამკუთხედის კათეტებია 3 სმ და 4 სმ. რას უდრის ჰიპოტენუზა?",
-            options: stroke = ["5 სმ", "6 სმ", "7 სმ", "25 სმ"],
+            options: ["5 სმ", "6 სმ", "7 სმ", "25 სმ"],
             correct: "5 სმ"
         }
     ];
@@ -125,19 +124,15 @@
     let currentQuestion = null;
 
     function loadRandomQuestion() {
-        // ფიდბექის და ძველი სტილების გასუფთავება
         document.getElementById('feedback').innerText = '';
         const optionsBox = document.getElementById('options-box');
         optionsBox.innerHTML = '';
 
-        // შემთხვევითი ამოცანის შერჩევა
         const randomIndex = Math.floor(Math.random() * questionBank.length);
         currentQuestion = questionBank[randomIndex];
 
-        // კითხვის დასმა
         document.getElementById('question-text').innerHTML = currentQuestion.question;
 
-        // ვარიანტების ღილაკების შექმნა
         currentQuestion.options.forEach(option => {
             const button = document.createElement('button');
             button.className = 'btn';
@@ -146,7 +141,6 @@
             optionsBox.appendChild(button);
         });
 
-        // MathJax-ის იძულება, რომ ახალი ფორმულები გადაამუშაოს ეკრანზე
         if (window.MathJax) {
             MathJax.typesetPromise();
         }
@@ -154,8 +148,6 @@
 
     function checkAnswer(selectedButton, selectedOption) {
         const buttons = document.querySelectorAll('.options-container .btn');
-        
-        // ღილაკების გათიშვა, რომ მეორედ აღარ დააჭირონ
         buttons.forEach(btn => btn.disabled = true);
 
         if (selectedOption === currentQuestion.correct) {
@@ -165,7 +157,6 @@
             selectedButton.classList.add('wrong');
             document.getElementById('feedback').innerHTML = "<span style='color: #e74c3c;'>არასწორია ➔</span>";
             
-            // სწორი პასუხის მწვანედ შეფერვა
             buttons.forEach(btn => {
                 if (btn.innerHTML === currentQuestion.correct) {
                     btn.classList.add('correct');
@@ -174,7 +165,6 @@
         }
     }
 
-    // საიტის ჩატვირთვისთანავე პირველი კითხვის ჩვენება
     window.onload = loadRandomQuestion;
 </script>
 
