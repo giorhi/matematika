@@ -120,4 +120,22 @@
 
         if (selectedOption === currentQuestion.correct) {
             resultDiv.innerHTML = "<span style='color: green;'>სწორია! 🎉</span>";
-            setTimeout
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questionBank.length) {
+                    loadQuestion();
+                } else {
+                    document.getElementById("quiz").innerHTML = "<h2>ტესტი დასრულდა! ყოჩაღ! 🌟</h2>";
+                }
+            }, 1500);
+        } else {
+            resultDiv.innerHTML = "<span style='color: red;'>არასწორია, სცადე თავიდან! ❌</span>";
+        }
+    }
+
+    // ტესტის გაშვება
+    loadQuestion();
+</script>
+
+</body>
+</html>
